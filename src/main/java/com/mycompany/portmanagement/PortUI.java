@@ -162,10 +162,18 @@ public class PortUI extends Application {
         neededForkliftsColumn.setCellValueFactory(new PropertyValueFactory<>("neededForklifts"));
         neededForkliftsColumn.setPrefWidth(60);
 
-        shipsTable.getColumns().addAll(idColumn,
-                allocatedDocksColumn, maxDocksColumn, neededDocksColumn,
-                allocatedCranesColumn, maxCranesColumn, neededCranesColumn,
-                allocatedForkliftsColumn, maxForkliftsColumn, neededForkliftsColumn);
+        // Fix for type safety warning - add columns individually instead of using
+        // varargs
+        shipsTable.getColumns().add(idColumn);
+        shipsTable.getColumns().add(allocatedDocksColumn);
+        shipsTable.getColumns().add(maxDocksColumn);
+        shipsTable.getColumns().add(neededDocksColumn);
+        shipsTable.getColumns().add(allocatedCranesColumn);
+        shipsTable.getColumns().add(maxCranesColumn);
+        shipsTable.getColumns().add(neededCranesColumn);
+        shipsTable.getColumns().add(allocatedForkliftsColumn);
+        shipsTable.getColumns().add(maxForkliftsColumn);
+        shipsTable.getColumns().add(neededForkliftsColumn);
 
         shipsTable.setOnMouseClicked(event -> {
             Ship selectedShip = shipsTable.getSelectionModel().getSelectedItem();

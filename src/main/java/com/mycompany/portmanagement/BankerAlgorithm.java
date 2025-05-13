@@ -222,17 +222,14 @@ public class BankerAlgorithm {
 
             for (int i = 0; i < shipIds.size(); i++) {
                 if (!finish[i]) {
-                    boolean canAllocate = true;
-
-                    // Check if all needed resources are available
-                    for (int j = 0; j < NUM_RESOURCES; j++) {
+                    int j;
+                    for (j = 0; j < NUM_RESOURCES; j++) {
                         if (need.get(i)[j] > work[j]) {
-                            canAllocate = false;
                             break;
                         }
                     }
 
-                    if (canAllocate) {
+                    if (j == NUM_RESOURCES) {
                         // All resources can be allocated
                         for (int k = 0; k < NUM_RESOURCES; k++) {
                             work[k] += allocation.get(i)[k];
@@ -279,36 +276,6 @@ public class BankerAlgorithm {
     }
 
     /**
-     * Get needed resources for a specific ship
-     * 
-     * @param shipId The identifier for the ship
-     * @return Array of needed resources [docks, cranes, forklifts] or null if ship
-     *         not found
-     */
-    public int[] getNeeded(String shipId) {
-        int shipIndex = findShipIndex(shipId);
-        if (shipIndex != -1) {
-            return need.get(shipIndex).clone();
-        }
-        return null;
-    }
-
-    /**
-     * Get maximum resources for a specific ship
-     * 
-     * @param shipId The identifier for the ship
-     * @return Array of maximum resources [docks, cranes, forklifts] or null if ship
-     *         not found
-     */
-    public int[] getMaximum(String shipId) {
-        int shipIndex = findShipIndex(shipId);
-        if (shipIndex != -1) {
-            return maximum.get(shipIndex).clone();
-        }
-        return null;
-    }
-
-    /**
      * Get all ships in the system
      * 
      * @return List of ship IDs
@@ -328,31 +295,52 @@ public class BankerAlgorithm {
     }
 
     /**
-     * Get a formatted string representation of the current state
+     * Get needed resources for a specific ship
      * 
-     * @return String with detailed info about the current algorithm state
+     * @param shipId The identifier for the ship
+     * @return Array of needed resources [docks, cranes, forklifts] or null if ship
+     *         not found
+     */
+    public int[] getNeeded(String shipId) {
+        int shipIndex = findShipIndex(shipId);
+        if (shipIndex != -1) {
+            return need.get(shipIndex).clone();
+        }
+        return null;
+    }
+
+    /**
+     * Get a string representation of the current algorithm state
+     * 
+     * @return String describing the current state of resources and allocations
      */
     public String getStateInfo() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Available: [D:").append(available[0])
-                .append(", C:").append(available[1])
-                .append(", F:").append(available[2])
-                .append("]\n");
+        StringBuilder info = new StringBuilder();
 
+        // Available resources
+        info.append("Available Resources: [")
+                .append(available[0]).append(", ")
+                .append(available[1]).append(", ")
+                .append(available[2]).append("]\n");
+
+        // Ship allocations and needs
+        info.append("Ships:\n");
         for (int i = 0; i < shipIds.size(); i++) {
-            sb.append("Ship ").append(shipIds.get(i))
-                    .append(" - Max: [D:").append(maximum.get(i)[0])
-                    .append(", C:").append(maximum.get(i)[1])
-                    .append(", F:").append(maximum.get(i)[2])
-                    .append("], Allocated: [D:").append(allocation.get(i)[0])
-                    .append(", C:").append(allocation.get(i)[1])
-                    .append(", F:").append(allocation.get(i)[2])
-                    .append("], Need: [D:").append(need.get(i)[0])
-                    .append(", C:").append(need.get(i)[1])
-                    .append(", F:").append(need.get(i)[2])
-                    .append("]\n");
+            info.append("  ").append(shipIds.get(i)).append(":\n");
+            info.append("    Max: [")
+                    .append(maximum.get(i)[0]).append(", ")
+                    .append(maximum.get(i)[1]).append(", ")
+                    .append(maximum.get(i)[2]).append("]\n");
+            info.append("    Allocated: [")
+                    .append(allocation.get(i)[0]).append(", ")
+                    .append(allocation.get(i)[1]).append(", ")
+                    .append(allocation.get(i)[2]).append("]\n");
+            info.append("    Need: [")
+                    .append(need.get(i)[0]).append(", ")
+                    .append(need.get(i)[1]).append(", ")
+                    .append(need.get(i)[2]).append("]\n");
         }
 
-        return sb.toString();
+        return info.toString();
     }
 }
