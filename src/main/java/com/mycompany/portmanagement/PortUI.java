@@ -122,6 +122,25 @@ public class PortUI extends Application {
         shipsTable.setPlaceholder(new Label("No ships in port"));
         shipsTable.setItems(ships);
 
+        // Add styling for rows
+        shipsTable.setRowFactory(tv -> new TableRow<Ship>() {
+            @Override
+            protected void updateItem(Ship ship, boolean empty) {
+                super.updateItem(ship, empty);
+
+                // Clear any existing style
+                setStyle("");
+
+                if (ship != null) {
+                    // Apply green background for fully allocated ships
+                    if (ship.isFullyAllocated()) {
+                        setStyle("-fx-background-color: #90EE90;"); // Light green
+                        setTooltip(new Tooltip("All resource requirements met - Ready to release"));
+                    }
+                }
+            }
+        });
+
         TableColumn<Ship, String> idColumn = new TableColumn<>("Ship ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         idColumn.setPrefWidth(80);
@@ -285,7 +304,7 @@ public class PortUI extends Application {
                         }
                     }
 
-                    // Refresh table to show updated allocations
+                    // Refresh table to show updated allocations and apply styling
                     shipsTable.refresh();
 
                     // Update total resources display

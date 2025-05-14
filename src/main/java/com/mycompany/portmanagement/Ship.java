@@ -124,6 +124,18 @@ public class Ship {
         this.allocatedForklifts += forklifts;
     }
 
+    /**
+     * Checks if all resource needs have been fulfilled for the ship
+     * 
+     * @return true if all needed resources (docks, cranes, forklifts) are fully
+     *         allocated
+     */
+    public boolean isFullyAllocated() {
+        return allocatedDocks >= maxDocks &&
+                allocatedCranes >= maxCranes &&
+                allocatedForklifts >= maxForklifts;
+    }
+
     @Override
     public String toString() {
         return String.format("%s (Docks: %d/%d/%d, Cranes: %d/%d/%d, Forklifts: %d/%d/%d)",
